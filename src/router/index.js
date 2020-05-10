@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/components/Login'
+import SWLG from '@/views/SimpleWorkLogGenerator/index'
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/swlg',
+    name: 'SWLG',
+    component: SWLG
   },
 //   {
 //     path: '/about',

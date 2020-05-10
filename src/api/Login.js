@@ -6,3 +6,11 @@ export function getBingPic() {
         method: 'get',
     })
 }
+
+export function getToken(pramas) {
+    return request({
+        url: 'http://localhost:8088/oauth/token',
+        method: 'post',
+        data: params
+    })
+}

@@ -10,6 +10,7 @@
       <div id="avaterBox">
         <img src="@/assets/myava.jpg" />
       </div>
+      <h3 align="center">告诉我你是谁好吗</h3>
       <!--表单-->
       <div id="loginForm">
         <el-form ref="loginForm" status-icon v-model="userLoginForm" :rules="userLoginFormRules">
@@ -20,8 +21,8 @@
             <el-input v-model="userLoginForm.password" type="password"></el-input>
           </el-form-item>
           <el-form-item class="btns">
-            <el-button type="primary" @click="submitForm()">提交</el-button>
-            <el-button type="info" @click="resetForm()">重置</el-button>
+            <el-button type="primary" @click="submitForm()">起飞</el-button>
+            <el-button type="info" @click="resetForm()">诶，还没飞呢</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -30,7 +31,8 @@
 </template>
 
 <script>
-import { getBingPic } from '@/api/Login'
+import { getBingPic,getToken } from '@/api/Login'
+import client from '@/clientConfig/client'
 
 export default {
   name: 'Login',
@@ -56,6 +58,13 @@ export default {
         this.bingPicSrc = res.data.data.url
         this.bingPicCopyright = res.data.data.copyright
       })
+    },
+    submitForm(){
+      this.$refs.userLoginFormRules.validate(valid =>{
+        getToken({
+
+        }).then
+      });
     },
     resetForm() {
       this.userLoginForm = {}
@@ -85,7 +94,14 @@ export default {
   left: 50%;
   top: 50%;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  opacity: 93%;
+}
+#loginBox h3{
+  position: absolute;
+  left: 50%;
+  top: 23%;
   transform: translate(-50%, -50%);
 }
 #avaterBox {
