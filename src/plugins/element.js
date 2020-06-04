@@ -6,7 +6,18 @@ import {
     Input,
     Tabs,
     TabPane,
-    Radio, RadioButton, RadioGroup, DatePicker, Col, Select, Option,Row,TimePicker
+    Radio,
+    RadioButton,
+    RadioGroup,
+    DatePicker,
+    Col,
+    Select,
+    Option,
+    Row,
+    TimePicker,
+    Table,
+    TableColumn,
+    Pagination
 } from 'element-ui'
 
 Vue.use(Button);
@@ -24,3 +35,6 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Row);
 Vue.use(TimePicker);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Pagination);
