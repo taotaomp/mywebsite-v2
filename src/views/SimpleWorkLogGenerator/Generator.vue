@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="workLog" label-width="80px">
+  <el-form ref="form" :model="workLog" label-width="80px" id="mainForm">
     <el-row>
       <el-col :xs="24" :sm="9" :md="8" :lg="8">
         <el-form-item label="日期">
@@ -15,7 +15,12 @@
       <el-col :xs="24" :sm="9" :md="8" :lg="8">
         <el-form-item label="工作类型">
           <el-select v-model="workLog.workTypeId">
-            <el-option value="1">1</el-option>
+            <el-option
+              v-for="item in workTypeList"
+              :key="item.rowId"
+              :label="item.workTypeName"
+              :value="item.rowId"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -36,7 +41,12 @@
       <el-col :xs="24" :sm="9" :md="8" :lg="8">
         <el-form-item label="工作单元">
           <el-select v-model="workLog.workUnitId">
-            <el-option value="1">1</el-option>
+            <el-option
+              v-for="item in workUnitList"
+              :key="item.rowId"
+              :label="item.workUnitName"
+              :value="item.rowId"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -59,18 +69,29 @@
     </div>
     <el-row>
       <el-col :xs="24" :sm="20" :md="13" :lg="13">
-      <div id="submitBtn">
-        <el-button type="success" @click="submitLog">提交</el-button>
-      </div>
+        <div id="submitBtn">
+          <el-button type="success" @click="submitLog">提交</el-button>
+          <el-button type="info" @click="resetLog">重置</el-button>
+        </div>
       </el-col>
     </el-row>
   </el-form>
 </template>
 
 <script>
+import {
+  uploadWorkLog,
+  getAllWorkType,
+  getAllWorkUnit
+} from '@/api/Swlg/WorkLogGenerator';
+import { Message } from 'element-ui';
 const defaultWorkLogDetail = { workLogId: '', content: '' };
 export default {
   name: 'Generator',
+  created() {
+    this.getWorkTypeList();
+    this.getWorkUnitList();
+  },
   data() {
     return {
       workLog: {
@@ -79,6 +100,8 @@ export default {
         finishTime: new Date(),
         workLogDetails: [{}]
       },
+      workTypeList: [],
+      workUnitList: [],
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -114,25 +137,54 @@ export default {
     addLog() {
       var workLogDetail = Object.assign({}, defaultWorkLogDetail);
       this.workLog.workLogDetails.push(workLogDetail);
-      console.log(this.workLog.workLogDetails);
+      // console.log(this.workLog.workLogDetails);
+    },
+    resetLog(){
+
     },
     removeLog(item) {
       this.workLog.workLogDetails.splice(
         this.workLog.workLogDetails.indexOf(item),
         1
       );
-      console.log(this.workLog.workLogDetails);
+      // console.log(this.workLog.workLogDetails);
     },
-    submitLog(){
-      
+    submitLog() {
+      uploadWorkLog(this.workLog).then(response => {
+        if (response.data.code == 200) {
+          Message({
+            type: 'success',
+            message: '记录成功'
+          });
+        } else {
+          Message({
+            type: 'error',
+            message: '记录失败:' + response.data.message
+          });
+        }
+      });
+    },
+    getWorkTypeList() {
+      getAllWorkType({}).then(response => {
+        console.log(response)
+        this.workTypeList = response.data.data;
+      });
+    },
+    getWorkUnitList() {
+      getAllWorkUnit({}).then(response => {
+        this.workUnitList = response.data.data;
+      });
     }
   }
 };
 </script>
 
 <style>
-#submitBtn{
+#submitBtn {
   display: flex;
   justify-content: flex-end;
+}
+#mainForm {
+  margin: 0 auto;
 }
 </style>

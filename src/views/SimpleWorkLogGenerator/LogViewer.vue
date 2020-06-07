@@ -41,13 +41,13 @@
       </el-form>
     </div>
     <div id="content">
-      <el-table :data="logList" border style="width: 100%;" highlight-current-row >
+      <el-table :data="logList" border style="width: 100%;" highlight-current-row>
         <el-row>
-          <el-table-column prop="logDate" label="工作日期" align="center" fixed></el-table-column>
+          <el-table-column prop="logDate" label="工作日期" align="center" fixed :formatter="formatDate"></el-table-column>
           <el-table-column prop="workTypeId" label="工作类型" align="center"></el-table-column>
           <el-table-column prop="workUnitId" label="工作单元" align="center"></el-table-column>
-          <el-table-column prop="startTime" label="开始时间" align="center"></el-table-column>
-          <el-table-column prop="finishTime" label="结束时间" align="center"></el-table-column>
+          <el-table-column prop="startTime" label="开始时间" align="center" :formatter="formatTime"></el-table-column>
+          <el-table-column prop="finishTime" label="结束时间" align="center" :formatter="formatTime"></el-table-column>
           <el-table-column prop="content" label="工作内容" align="center"></el-table-column>
         </el-row>
       </el-table>
@@ -68,12 +68,24 @@
 </template>
 
 <script>
+import {
+  queryAll,
+  queryAllByPage,
+  insert,
+  update,
+  deleteById
+} from '@/api/Swlg/WorkLogView';
+import {FormatDate} from '@/utils/date'
 const defaultQueryParam = {
-  pageNum: 1,
-  pageSize: 10
+  pageNumber: 1,
+  pageSize: 10,
+  isDelete: 0
 };
 export default {
   name: 'LogViewer',
+  created(){
+    this.getlogList();
+  },
   data() {
     return {
       queryParam: Object.assign({}, defaultQueryParam),
@@ -124,7 +136,7 @@ export default {
       logList: [],
       workUintList: [],
       workTypeList: [],
-      total:0
+      total: 0
     };
   },
   methods: {
@@ -133,7 +145,12 @@ export default {
       this.queryParam.endDateQuery = this.dataBetween[1];
     },
     queryLog() {},
-    getlogList() {},
+    getlogList() {
+      queryAllByPage(this.queryParam).then(response =>{
+        console.log(response)
+        this.logList = response.data.data.records;
+      });
+    },
     handleSizeChange(val) {
       this.queryParam.pageNum = 1;
       this.queryParam.pageSize = val;
@@ -153,7 +170,7 @@ export default {
   float: right;
   margin-top: 20px;
 }
-#content .el-table{
-    height: 300px;
+#content .el-table {
+  height: 300px;
 }
 </style>
