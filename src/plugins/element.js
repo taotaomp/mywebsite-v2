@@ -17,7 +17,8 @@ import {
     TimePicker,
     Table,
     TableColumn,
-    Pagination
+    Pagination,
+    Dialog
 } from 'element-ui'
 
 Vue.use(Button);
@@ -38,3 +39,4 @@ Vue.use(TimePicker);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Pagination);
+Vue.use(Dialog);

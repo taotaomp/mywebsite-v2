@@ -3,14 +3,28 @@
     <div id="header">
       <el-form :model="queryParam" label-width="80px" ref="from">
         <el-row>
-          <el-col :xs="24" :sm="9" :md="8" :lg="8">
+          <el-col :xs="24" :sm="9" :md="8" :lg="6">
             <el-form-item label="工作类型">
-              <el-select v-model="queryParam.workTypeId"></el-select>
+              <el-select v-model="queryParam.workTypeId">
+                <el-option
+                  v-for="item in workTypeList"
+                  :key="item.rowId"
+                  :label="item.workTypeName"
+                  :value="item.rowId"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="9" :md="8" :lg="8">
             <el-form-item label="工作单元">
-              <el-select v-model="queryParam.workTypeId"></el-select>
+              <el-select v-model="queryParam.workUnitId">
+                <el-option
+                  v-for="item in workUnitList"
+                  :key="item.rowId"
+                  :label="item.workUnitName"
+                  :value="item.rowId"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -31,9 +45,10 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="4" :md="4" :lg="3">
+          <el-col :xs="24" :sm="4" :md="6" :lg="4">
             <div id="submitBtn">
               <el-button type="primary" @click="queryLog">搜索</el-button>
+              <el-button type="info" @click="queryLog">重置</el-button>
               <el-button type="success" @click="queryLog">导出</el-button>
             </div>
           </el-col>
@@ -44,8 +59,22 @@
       <el-table :data="logList" border style="width: 100%;" highlight-current-row>
         <el-row>
           <el-table-column prop="logDate" label="工作日期" align="center" fixed :formatter="formatDate"></el-table-column>
-          <el-table-column prop="workTypeId" label="工作类型" align="center"></el-table-column>
-          <el-table-column prop="workUnitId" label="工作单元" align="center"></el-table-column>
+          <el-table-column
+            prop="workTypeId"
+            label="工作类型"
+            align="center"
+            :formatter="function(row, column, cellValue){
+                return workTypeFomatter(cellValue);
+                }"
+          ></el-table-column>
+          <el-table-column
+            prop="workUnitId"
+            label="工作单元"
+            align="center"
+            :formatter="function(row, column, cellValue){
+                return workUnitFomatter(cellValue);
+                }"
+          ></el-table-column>
           <el-table-column prop="startTime" label="开始时间" align="center" :formatter="formatTime"></el-table-column>
           <el-table-column prop="finishTime" label="结束时间" align="center" :formatter="formatTime"></el-table-column>
           <el-table-column prop="content" label="工作内容" align="center"></el-table-column>
@@ -73,9 +102,11 @@ import {
   queryAllByPage,
   insert,
   update,
-  deleteById
+  deleteById,
+  getAllWorkType,
+  getAllWorkUnit
 } from '@/api/Swlg/WorkLogView';
-import {FormatDate} from '@/utils/date'
+import { FormatDate } from '@/utils/date';
 const defaultQueryParam = {
   pageNumber: 1,
   pageSize: 10,
@@ -83,8 +114,10 @@ const defaultQueryParam = {
 };
 export default {
   name: 'LogViewer',
-  created(){
+  created() {
     this.getlogList();
+    this.getWorkTypeList();
+    this.getWorkUnitList();
   },
   data() {
     return {
@@ -134,7 +167,7 @@ export default {
         ]
       },
       logList: [],
-      workUintList: [],
+      workUnitList: [],
       workTypeList: [],
       total: 0
     };
@@ -144,11 +177,26 @@ export default {
       this.queryParam.startDateQuery = this.dataBetween[0];
       this.queryParam.endDateQuery = this.dataBetween[1];
     },
-    queryLog() {},
-    getlogList() {
-      queryAllByPage(this.queryParam).then(response =>{
-        console.log(response)
+    queryLog() {
+      queryAllByPage(this.queryParam).then(response => {
         this.logList = response.data.data.records;
+        this.total = response.data.data.total;
+      });
+    },
+    getlogList() {
+      queryAllByPage(this.queryParam).then(response => {
+        this.logList = response.data.data.records;
+        this.total = response.data.data.total;
+      });
+    },
+    getWorkTypeList() {
+      getAllWorkType({}).then(response => {
+        this.workTypeList = response.data.data;
+      });
+    },
+    getWorkUnitList() {
+      getAllWorkUnit({}).then(response => {
+        this.workUnitList = response.data.data;
       });
     },
     handleSizeChange(val) {
@@ -159,6 +207,24 @@ export default {
     handleCurrentChange(val) {
       this.queryParam.pageNum = val;
       this.getlogList();
+    },
+    workTypeFomatter(cellValue) {
+      let workTypeId = cellValue;
+      this.workTypeList.forEach(workType => {
+        if(workType.rowId == workTypeId){
+          workTypeId = workType.workTypeName;
+        }
+      });
+      return workTypeId;
+    },
+    workUnitFomatter(cellValue) {
+      let workUnitId = cellValue;
+      this.workUnitList.forEach(workUnit => {
+        if(workUnit.rowId == workUnitId){
+          workUnitId = workUnit.workUnitName;
+        }
+      });
+      return workUnitId;
     }
   }
 };
