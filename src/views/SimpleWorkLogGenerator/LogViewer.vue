@@ -45,7 +45,7 @@
               ></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="4" :md="6" :lg="4">
+          <el-col :xs="24" :sm="7" :md="6" :lg="4">
             <div id="submitBtn">
               <el-button type="primary" @click="queryLog">搜索</el-button>
               <el-button type="info" @click="queryLog">重置</el-button>
@@ -56,13 +56,14 @@
       </el-form>
     </div>
     <div id="content">
-      <el-table :data="logList" border style="width: 100%;" highlight-current-row>
+      <el-table :data="logList" border style="width: 100%;" highlight-current-row max-height="300">
         <el-row>
-          <el-table-column prop="logDate" label="工作日期" align="center" fixed :formatter="formatDate"></el-table-column>
+          <el-table-column prop="logDate" label="工作日期" align="center" fixed :formatter="formatDate" width="100px"></el-table-column>
           <el-table-column
             prop="workTypeId"
             label="工作类型"
             align="center"
+            width="150px"
             :formatter="function(row, column, cellValue){
                 return workTypeFomatter(cellValue);
                 }"
@@ -71,13 +72,23 @@
             prop="workUnitId"
             label="工作单元"
             align="center"
+            width="200px"
             :formatter="function(row, column, cellValue){
                 return workUnitFomatter(cellValue);
                 }"
           ></el-table-column>
-          <el-table-column prop="startTime" label="开始时间" align="center" :formatter="formatTime"></el-table-column>
-          <el-table-column prop="finishTime" label="结束时间" align="center" :formatter="formatTime"></el-table-column>
-          <el-table-column prop="content" label="工作内容" align="center"></el-table-column>
+          <el-table-column prop="startTime" label="开始时间" align="center" :formatter="formatTime" width="100px"></el-table-column>
+          <el-table-column prop="finishTime" label="结束时间" align="center" :formatter="formatTime" width="100px"></el-table-column>
+          <el-table-column prop="content" label="工作内容" align="center">
+            <template slot-scope="scope">
+              <p
+                v-for="item in scope.row.workLogDetailList"
+                :key="item.rowId"
+                v-text="item.content"
+                style="margin: 0px"
+              >{{item.content}}</p>
+            </template>
+          </el-table-column>
         </el-row>
       </el-table>
     </div>
@@ -211,7 +222,7 @@ export default {
     workTypeFomatter(cellValue) {
       let workTypeId = cellValue;
       this.workTypeList.forEach(workType => {
-        if(workType.rowId == workTypeId){
+        if (workType.rowId == workTypeId) {
           workTypeId = workType.workTypeName;
         }
       });
@@ -220,7 +231,7 @@ export default {
     workUnitFomatter(cellValue) {
       let workUnitId = cellValue;
       this.workUnitList.forEach(workUnit => {
-        if(workUnit.rowId == workUnitId){
+        if (workUnit.rowId == workUnitId) {
           workUnitId = workUnit.workUnitName;
         }
       });
@@ -236,7 +247,7 @@ export default {
   float: right;
   margin-top: 20px;
 }
-#content .el-table {
+/* #content .el-table {
   height: 300px;
-}
+} */
 </style>
