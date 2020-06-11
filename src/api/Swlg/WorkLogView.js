@@ -63,3 +63,12 @@ export function getAllWorkUnit(params) {
         data: params
     })
 }
+
+export function exportData(params) {
+    return request({
+        url: '/workLog/export',
+        method: 'post',
+        data: params,
+        responseType: 'blob',
+    })
+}

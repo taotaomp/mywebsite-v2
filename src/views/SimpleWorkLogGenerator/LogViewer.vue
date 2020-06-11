@@ -48,8 +48,8 @@
           <el-col :xs="24" :sm="7" :md="6" :lg="4">
             <div id="submitBtn">
               <el-button type="primary" @click="queryLog">搜索</el-button>
-              <el-button type="info" @click="queryLog">重置</el-button>
-              <el-button type="success" @click="queryLog">导出</el-button>
+              <el-button type="info" @click="handleReset">重置</el-button>
+              <el-button type="success" @click="handleExport">导出</el-button>
             </div>
           </el-col>
         </el-row>
@@ -58,7 +58,14 @@
     <div id="content">
       <el-table :data="logList" border style="width: 100%;" highlight-current-row max-height="300">
         <el-row>
-          <el-table-column prop="logDate" label="工作日期" align="center" fixed :formatter="formatDate" width="100px"></el-table-column>
+          <el-table-column
+            prop="logDate"
+            label="工作日期"
+            align="center"
+            fixed
+            :formatter="formatDate"
+            width="100px"
+          ></el-table-column>
           <el-table-column
             prop="workTypeId"
             label="工作类型"
@@ -77,8 +84,20 @@
                 return workUnitFomatter(cellValue);
                 }"
           ></el-table-column>
-          <el-table-column prop="startTime" label="开始时间" align="center" :formatter="formatTime" width="100px"></el-table-column>
-          <el-table-column prop="finishTime" label="结束时间" align="center" :formatter="formatTime" width="100px"></el-table-column>
+          <el-table-column
+            prop="startTime"
+            label="开始时间"
+            align="center"
+            :formatter="formatTime"
+            width="100px"
+          ></el-table-column>
+          <el-table-column
+            prop="finishTime"
+            label="结束时间"
+            align="center"
+            :formatter="formatTime"
+            width="100px"
+          ></el-table-column>
           <el-table-column prop="content" label="工作内容" align="center">
             <template slot-scope="scope">
               <p
@@ -115,9 +134,11 @@ import {
   update,
   deleteById,
   getAllWorkType,
-  getAllWorkUnit
+  getAllWorkUnit,
+  exportData
 } from '@/api/Swlg/WorkLogView';
 import { FormatDate } from '@/utils/date';
+import { Message } from 'element-ui';
 const defaultQueryParam = {
   pageNumber: 1,
   pageSize: 10,
@@ -185,6 +206,11 @@ export default {
   },
   methods: {
     dateLoad2Param() {
+      if (this.dataBetween == null) {
+        this.queryParam.startDateQuery = null;
+        this.queryParam.endDateQuery = null;
+        return;
+      }
       this.queryParam.startDateQuery = this.dataBetween[0];
       this.queryParam.endDateQuery = this.dataBetween[1];
     },
@@ -192,6 +218,29 @@ export default {
       queryAllByPage(this.queryParam).then(response => {
         this.logList = response.data.data.records;
         this.total = response.data.data.total;
+      });
+    },
+    handleReset() {
+      this.queryParam = Object.assign({}, defaultQueryParam);
+      this.dataBetween = null;
+      this.getlogList();
+    },
+    handleExport() {
+      Message.info('正在导出');
+      exportData(this.queryParam).then(res => {
+        var blob = new Blob([res.data], {
+          type: 'application/vnd.ms-excel;charset=utf-8'
+        });
+        var downloadElement = document.createElement('a');
+        var href = window.URL.createObjectURL(blob);
+        downloadElement.href = href;
+        downloadElement.download =
+          '日志:' +new Date
+          '导出.xlsx';
+        document.body.appendChild(downloadElement);
+        downloadElement.click();
+        document.body.removeChild(downloadElement);
+        window.URL.revokeObjectURL(href);
       });
     },
     getlogList() {
