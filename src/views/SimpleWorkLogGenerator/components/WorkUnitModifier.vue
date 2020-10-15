@@ -10,7 +10,7 @@
         <el-table
           stripe
           border
-          :data="workTypeList"
+          :data="workUnitList"
           @row-click="handleRowClick"
           highlight-current-row
         >
@@ -31,25 +31,50 @@
         </el-table>
       </el-row>
     </div>
+    <div id="dialog">
+      <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" class="common-dialog">
+        <el-form :model="workUnitForm">
+          <el-form-item label="工作单元" prop="workUnitName">
+            <el-input v-model="workUnitForm.workUnitName"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="success" class="dialogBtn" @click="submit">提交</el-button>
+            <el-button type="info" class="dialogBtn" @click="dialogFormVisible=false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import {
+  queryAll,
+  queryAllByPage,
+  insert,
+  update,
+  deleteById
+} from '@/api/Swlg/WorkUnit';
 import { Message } from 'element-ui';
 export default {
   name: 'WorkUnitModifier',
+  created() {
+    this.getList();
+  },
   data() {
     return {
       thisSelRow: null,
-      workTypeList: [
-        { id: '1', workUnitName: 'fuck3' },
-        { id: '2', workUnitName: 'fuck42' }
-      ]
+      dialogTitle: '',
+      dialogFormVisible: false,
+      workUnitList: [],
+      workUnitForm: {}
     };
   },
   methods: {
-    getList(){
-      
+    getList() {
+      queryAll({}).then(response => {
+        this.workUnitList = response.data.data;
+      });
     },
     handleEdit(id) {
       if (!this.thisSelRow) {
@@ -59,6 +84,9 @@ export default {
         });
         return;
       }
+      this.workUnitForm = this.thisSelRow;
+      this.dialogTitle = '编辑工作单元';
+      this.dialogFormVisible = true;
     },
     handleDelete(id) {
       if (!this.thisSelRow) {
@@ -68,13 +96,86 @@ export default {
         });
         return;
       }
+      deleteById({ rowId: this.thisSelRow.rowId }).then(res => {
+        if (res.data.code == 200) {
+          Message({
+            type: 'success',
+            message: '删除成功'
+          });
+          this.dialogFormVisible = false;
+          this.getList();
+        } else {
+          Message({
+            type: 'error',
+            message: res.data.message
+          });
+        }
+      });
     },
     handleRowClick(row, column, event) {
       this.thisSelRow = row;
+    },
+    handleNew() {
+      this.workUnitForm = {};
+      this.dialogTitle = '新增工作单元';
+      this.dialogFormVisible = true;
+    },
+    submit() {
+      if (this.workUnitForm.rowId) {
+        update({
+          rowId: this.workUnitForm.rowId,
+          workUnitName: this.workUnitForm.workUnitName
+        }).then(res => {
+          if (res.data.code == 200) {
+            Message({
+              type: 'success',
+              message: '修改成功'
+            });
+            this.dialogFormVisible = false;
+            this.getList();
+          } else {
+            Message({
+              type: 'error',
+              message: res.data.message
+            });
+          }
+        });
+      } else {
+        this.workUnitForm.isDelete = 0;
+        insert(this.workUnitForm).then(res => {
+          if (res.data.code == 200) {
+            Message({
+              type: 'success',
+              message: '新增成功'
+            });
+            this.dialogFormVisible = false;
+            this.getList();
+          } else {
+            Message({
+              type: 'error',
+              message: 'res.data.message'
+            });
+          }
+        });
+      }
     }
   }
 };
 </script>
 
 <style scoped>
+.el-form-item__label {
+  width: 130px;
+}
+.el-input {
+  width: 80%;
+}
+.el-dialog {
+  margin-top: 15vh;
+  width: 520px;
+}
+.dialogBtn {
+  float: right;
+  margin-left: 10px;
+}
 </style>

@@ -47,3 +47,28 @@ export function uploadWorkLog(params) {
         data: params
     })
 }
+
+export function getAllWorkType(params) {
+    return request({
+        url: '/workType/queryAll',
+        method: 'post',
+        data: params
+    })
+}
+
+export function getAllWorkUnit(params) {
+    return request({
+        url: '/workUnit/queryAll',
+        method: 'post',
+        data: params
+    })
+}
+
+export function exportData(params) {
+    return request({
+        url: '/workLog/export',
+        method: 'post',
+        data: params,
+        responseType: 'blob',
+    })
+}
