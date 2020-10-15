@@ -13,7 +13,7 @@
       <h3 align="center">告诉我你是谁好吗</h3>
       <!--表单-->
       <div id="loginForm">
-        <el-form ref="loginForm" status-icon v-model="userLoginForm" :rules="userLoginFormRules">
+        <el-form ref="loginForm" status-icon :model="userLoginForm" :rules="userLoginFormRules">
           <el-form-item label="用户名" label-width="65px" prop="username">
             <el-input v-model="userLoginForm.username"></el-input>
           </el-form-item>
@@ -33,6 +33,7 @@
 <script>
 import { getBingPic,getToken } from '@/api/Login'
 import client from '@/clientConfig/client'
+import { Message } from 'element-ui';
 
 export default {
   name: 'Login',
@@ -60,10 +61,22 @@ export default {
       })
     },
     submitForm(){
-      this.$refs.userLoginFormRules.validate(valid =>{
+      this.$refs.loginForm.validate(valid =>{
         getToken({
-
-        }).then
+          username:this.userLoginForm.username,
+          password:this.userLoginForm.password,
+          grant_type:client.grant_type,
+          client_id:client.client_id,
+          client_secret:client.client_secret
+        }).then(res => {
+          localStorage.setItem("token",res.data.access_token);
+          this.$router.push({path:'/swlg'})
+        }).catch(err => {
+          Message({
+          type: 'warning',
+          message: '认证失败'
+        });
+        })
       });
     },
     resetForm() {

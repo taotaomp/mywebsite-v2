@@ -7,10 +7,10 @@ export function getBingPic() {
     })
 }
 
-export function getToken(pramas) {
+export function getToken(params) {
     return request({
         url: 'http://localhost:8088/oauth/token',
         method: 'post',
-        data: params
+        params: params
     })
 }
