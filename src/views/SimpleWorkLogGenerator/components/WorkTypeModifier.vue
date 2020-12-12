@@ -105,6 +105,11 @@ export default {
             message: res.data.message
           });
         }
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleRowClick(row, column, event) {
@@ -112,7 +117,14 @@ export default {
     },
     getList() {
       queryAll({}).then(response => {
-        this.workTypeList = response.data.data;
+        if (response.data){
+          this.workTypeList = response.data.data;
+        }
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleNew() {
@@ -139,7 +151,12 @@ export default {
               message: res.data.message
             });
           }
+        }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
         });
+      });
       } else {
         this.workTypeForm.isDelete = 0;
         insert(this.workTypeForm).then(res => {
@@ -156,7 +173,12 @@ export default {
               message: 'res.data.message'
             });
           }
+        }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
         });
+      });
       }
     }
   }

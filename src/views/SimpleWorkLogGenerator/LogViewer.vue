@@ -218,6 +218,11 @@ export default {
       queryAllByPage(this.queryParam).then(response => {
         this.logList = response.data.data.records;
         this.total = response.data.data.total;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleReset() {
@@ -241,22 +246,42 @@ export default {
         downloadElement.click();
         document.body.removeChild(downloadElement);
         window.URL.revokeObjectURL(href);
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     getlogList() {
       queryAllByPage(this.queryParam).then(response => {
         this.logList = response.data.data.records;
         this.total = response.data.data.total;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     getWorkTypeList() {
       getAllWorkType({}).then(response => {
         this.workTypeList = response.data.data;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     getWorkUnitList() {
       getAllWorkUnit({}).then(response => {
         this.workUnitList = response.data.data;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleSizeChange(val) {

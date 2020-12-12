@@ -33,7 +33,7 @@
       </el-col>
       <el-col :xs="24" :sm="9" :md="8" :lg="8" :span="11">
         <el-form-item label="结束时间">
-          <el-time-picker arrow-control v-model="workLog.finishTime" placeholder="任意时间点"></el-time-picker>
+          <el-time-picker v-model="workLog.finishTime" placeholder="任意时间点"></el-time-picker>
         </el-form-item>
       </el-col>
     </el-row>
@@ -140,7 +140,10 @@ export default {
       // console.log(this.workLog.workLogDetails);
     },
     resetLog(){
-
+       this.workLog.logDate = new Date();
+       this.workLog.startTime = new Date();
+       this.workLog.finishTime = new Date();
+       this.workLog.workLogDetails = [{}];
     },
     removeLog(item) {
       this.workLog.workLogDetails.splice(
@@ -162,17 +165,31 @@ export default {
             message: '记录失败:' + response.data.message
           });
         }
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     getWorkTypeList() {
       getAllWorkType({}).then(response => {
-        console.log(response)
         this.workTypeList = response.data.data;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     getWorkUnitList() {
       getAllWorkUnit({}).then(response => {
         this.workUnitList = response.data.data;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     }
   }

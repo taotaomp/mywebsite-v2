@@ -14,11 +14,11 @@
       <!--表单-->
       <div id="loginForm">
         <el-form ref="loginForm" status-icon :model="userLoginForm" :rules="userLoginFormRules">
-          <el-form-item label="用户名" label-width="65px" prop="username">
-            <el-input v-model="userLoginForm.username"></el-input>
+          <el-form-item label="用户名" label-width="70px" prop="username">
+            <el-input v-model="userLoginForm.username" clearable></el-input>
           </el-form-item>
-          <el-form-item label="密码" label-width="65px" prop="password">
-            <el-input v-model="userLoginForm.password" type="password"></el-input>
+          <el-form-item label="密码" label-width="70px" prop="password">
+            <el-input v-model="userLoginForm.password" type="password" clearable></el-input>
           </el-form-item>
           <el-form-item class="btns">
             <el-button type="primary" @click="submitForm()">起飞</el-button>
@@ -73,9 +73,9 @@ export default {
           this.$router.push({path:'/swlg'})
         }).catch(err => {
           Message({
-          type: 'warning',
-          message: '认证失败'
-        });
+            type: 'warning',
+            message: '认证失败'
+          });
         })
       });
     },

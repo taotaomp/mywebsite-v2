@@ -74,6 +74,11 @@ export default {
     getList() {
       queryAll({}).then(response => {
         this.workUnitList = response.data.data;
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleEdit(id) {
@@ -110,6 +115,11 @@ export default {
             message: res.data.message
           });
         }
+      }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
+        });
       });
     },
     handleRowClick(row, column, event) {
@@ -139,7 +149,12 @@ export default {
               message: res.data.message
             });
           }
+        }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
         });
+      });
       } else {
         this.workUnitForm.isDelete = 0;
         insert(this.workUnitForm).then(res => {
@@ -156,7 +171,12 @@ export default {
               message: 'res.data.message'
             });
           }
+        }).catch(error => {
+        Message({
+        type: 'warning',
+        message: error.message
         });
+      });
       }
     }
   }
