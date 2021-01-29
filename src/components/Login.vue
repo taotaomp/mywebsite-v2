@@ -109,7 +109,7 @@ export default {
   background-color: white;
   border-radius: 10px;
   transform: translate(-50%, -50%);
-  opacity: 93%;
+  /* opacity: 93%; */
 }
 #loginBox h3{
   position: absolute;
