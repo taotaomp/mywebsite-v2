@@ -56,7 +56,7 @@
       </el-form>
     </div>
     <div id="content">
-      <el-table :data="logList" border style="width: 100%;" highlight-current-row max-height="300">
+      <el-table :data="logList" border style="width: 100%;" highlight-current-row max-height="500">
         <el-row>
           <el-table-column
             prop="logDate"
@@ -117,7 +117,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes, prev, pager, next, jumper"
-        :current-page.sync="queryParam.pageNum"
+        :current-page.sync="queryParam.pageNumber"
         :page-size="queryParam.pageSize"
         :page-sizes="[10,20,50]"
         :total="total"
@@ -255,6 +255,7 @@ export default {
     },
     getlogList() {
       queryAllByPage(this.queryParam).then(response => {
+        console.log(response.data.data)
         this.logList = response.data.data.records;
         this.total = response.data.data.total;
       }).catch(error => {
@@ -285,12 +286,12 @@ export default {
       });
     },
     handleSizeChange(val) {
-      this.queryParam.pageNum = 1;
+      this.queryParam.pageNumber = 1;
       this.queryParam.pageSize = val;
       this.getlogList();
     },
     handleCurrentChange(val) {
-      this.queryParam.pageNum = val;
+      this.queryParam.pageNumber = val;
       this.getlogList();
     },
     workTypeFomatter(cellValue) {
