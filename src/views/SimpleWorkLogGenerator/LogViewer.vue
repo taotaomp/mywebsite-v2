@@ -64,7 +64,7 @@
             align="center"
             fixed
             :formatter="formatDate"
-            width="100px"
+            width="110px"
           ></el-table-column>
           <el-table-column
             prop="workTypeId"
@@ -88,14 +88,12 @@
             prop="startTime"
             label="开始时间"
             align="center"
-            :formatter="formatTime"
             width="100px"
           ></el-table-column>
           <el-table-column
             prop="finishTime"
             label="结束时间"
             align="center"
-            :formatter="formatTime"
             width="100px"
           ></el-table-column>
           <el-table-column prop="content" label="工作内容" align="center">
