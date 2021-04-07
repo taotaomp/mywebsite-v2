@@ -28,12 +28,12 @@
     <el-row>
       <el-col :xs="24" :sm="9" :md="8" :lg="8" :span="11">
         <el-form-item label="开始时间">
-          <el-time-picker v-model="workLog.startTime" placeholder="任意时间点"></el-time-picker>
+          <el-time-picker v-model="workLog.startTime" placeholder="任意时间点" format="HH:mm" :picker-options="{selectableRange:'08:00:00 - 23:59:59'}" ></el-time-picker>
         </el-form-item>
       </el-col>
       <el-col :xs="24" :sm="9" :md="8" :lg="8" :span="11">
         <el-form-item label="结束时间">
-          <el-time-picker v-model="workLog.finishTime" placeholder="任意时间点"></el-time-picker>
+          <el-time-picker v-model="workLog.finishTime" placeholder="任意时间点" format="HH:mm" :picker-options="{selectableRange: '08:00:00 - 23:59:59'}" ></el-time-picker>
         </el-form-item>
       </el-col>
     </el-row>
