@@ -1,9 +1,13 @@
 import request from '@/utils/request'
+import axios from 'axios'
 
 export function getBingPic() {
-    return request({
-        url: 'https://v1.alapi.cn/api/bing?format=json',
-        method: 'get',
+    return axios({
+        method:'GET',
+        url:'/api/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN',
+        headers:{
+            "Access-Control-Allow-Origin":"*"
+        }
     })
 }
 

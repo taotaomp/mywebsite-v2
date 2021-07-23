@@ -56,8 +56,8 @@ export default {
   methods: {
     getBingPic() {
       getBingPic().then(res => {
-        this.bingPicSrc = res.data.data.url
-        this.bingPicCopyright = res.data.data.copyright
+        this.bingPicSrc = `https://cn.bing.com${res.data.images[0].url}`
+        this.bingPicCopyright = res.data.images[0].copyright
       })
     },
     submitForm(){
